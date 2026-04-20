@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 import { HiOutlineArrowRight, HiOutlineInformationCircle } from "react-icons/hi2";
 import { usePage } from "../_state/PageContext";
+import { getURL } from "../_lib/urls";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -70,7 +71,7 @@ export default function LoginPage() {
 
     try {
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: `${getURL()}/reset-password`,
       });
 
       if (resetError) throw resetError;

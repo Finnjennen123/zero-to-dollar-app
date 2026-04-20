@@ -12,6 +12,7 @@ import {
   HiOutlineDevicePhoneMobile 
 } from "react-icons/hi2";
 import { useAuth } from "./_lib/useAuth";
+import { getDisplayURL } from "./_lib/urls";
 
 export default function LandingPage() {
   const { isAuthenticated, signOut } = useAuth();
@@ -114,7 +115,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-12">
           {[
             { step: "1", title: "Build your page", body: "Add your bio, links, and photos in our intuitive live-preview editor." },
-            { step: "2", title: "Sign up for free", body: "Save your work and claim your unique corner.link URL in one click." },
+            { step: "2", title: "Sign up for free", body: `Save your work and claim your unique ${getDisplayURL()} URL in one click.` },
             { step: "3", title: "Publish when ready", body: "Go live and share your corner with your audience across all platforms." }
           ].map((item) => (
             <div key={item.step} className="flex flex-col items-center text-center">
@@ -143,7 +144,7 @@ export default function LandingPage() {
             { 
               icon: HiOutlineGlobeAlt, 
               title: "Your own URL", 
-              body: "Claim a clean, memorable corner.link/username that looks great in any bio." 
+              body: `Claim a clean, memorable ${getDisplayURL()}/username that looks great in any bio.` 
             },
             { 
               icon: HiOutlineDevicePhoneMobile, 

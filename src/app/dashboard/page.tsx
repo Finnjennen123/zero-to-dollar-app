@@ -8,6 +8,7 @@ import { PreviewPanel } from "./_components/PreviewPanel";
 import { FullScreenPreview } from "./_components/FullScreenPreview";
 
 import { usePage } from "../_state/PageContext";
+import { getDisplayURL } from "../_lib/urls";
 // Tabs
 import { LinksTab } from "./_tabs/LinksTab";
 import { ProfileTab } from "./_tabs/ProfileTab";
@@ -21,7 +22,7 @@ import { useEffect } from "react";
 import { Suspense } from "react";
 
 function DashboardContent() {
-  const [activeTap, setActiveTab] = useState<TabId>("links");
+  const [activeTab, setActiveTab] = useState<TabId>("links");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const searchParams = useSearchParams();
   const toast = useToast();
@@ -34,7 +35,7 @@ function DashboardContent() {
     const username = searchParams.get("username");
     
     if (status === "success") {
-      toast.show(`Your page is now live at corner.link/${username}`);
+      toast.show(`Your page is now live at ${getDisplayURL()}/${username}`);
       refresh(); // Sync the new "Live" status from DB
     } else if (status === "cancelled") {
       toast.show("Payment cancelled — your page stays in draft");

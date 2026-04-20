@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 import { HiOutlineCheckCircle, HiOutlineXCircle, HiOutlineArrowRight } from "react-icons/hi2";
 import { usePage } from "../_state/PageContext";
+import { getDisplayURL } from "../_lib/urls";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -169,7 +170,7 @@ export default function SignupPage() {
           <div className="space-y-2 pb-2">
             <label className="text-sm font-semibold text-[#1A1A1A] ml-1">Choose your username</label>
             <div className="relative font-sans">
-              <span className="absolute left-5 top-1/2 -translate-y-1/2 text-[#7A7A7A] font-medium">corner.link/</span>
+              <span className="absolute left-5 top-1/2 -translate-y-1/2 text-[#7A7A7A] font-medium">{getDisplayURL()}/</span>
               <input 
                 type="text" 
                 value={username}
@@ -192,7 +193,7 @@ export default function SignupPage() {
             </div>
             <div className="flex flex-col gap-1 mt-2 ml-1">
               <p className="text-xs text-[#7A7A7A] font-sans">
-                Your page will be at: <span className="text-[#1A1A1A] font-semibold">corner.link/{username || '[username]'}</span>
+                Your page will be at: <span className="text-[#1A1A1A] font-semibold">{getDisplayURL()}/{username || '[username]'}</span>
               </p>
               {username && isUsernameAvailable === false && !isCheckingUsername && (
                 <p className="text-xs text-[#D94F4F] font-medium font-sans">This username is taken or contains invalid characters.</p>

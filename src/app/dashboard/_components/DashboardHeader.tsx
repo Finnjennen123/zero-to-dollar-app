@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePage } from "../../_state/PageContext";
 import { useToast } from "../../_components/Toast";
+import { getDisplayURL } from "../../_lib/urls";
 import { LoginPromptModal } from "./LoginPromptModal";
 import { useAuth } from "../../_lib/useAuth";
 import { supabase } from "../../../lib/supabase";
@@ -94,7 +95,7 @@ export function DashboardHeader({ onPreviewClick }: DashboardHeaderProps) {
           <span className="text-xs font-medium text-text-secondary">
             {data.isPublished ? (
               <span className="flex items-center gap-1.5">
-                Live at corner.link/{data.profile.username}
+                Live at {getDisplayURL()}/{data.profile.username}
                 <HiArrowTopRightOnSquare className="opacity-50" />
               </span>
             ) : (

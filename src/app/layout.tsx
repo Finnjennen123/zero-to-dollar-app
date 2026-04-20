@@ -17,6 +17,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   title: "Corner | Your personal corner of the internet",
   description: "Create a beautiful, designer-quality link-in-bio page in seconds. Build your digital identity with Corner.",
   keywords: ["link in bio", "digital business card", "personal website", "creator tools"],
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Corner | Your personal corner of the internet",
     description: "Build a stunning link-in-bio page in seconds.",
-    url: "https://corner.link",
+    url: "/",
     siteName: "Corner",
     type: "website",
   },
