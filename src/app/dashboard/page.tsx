@@ -18,7 +18,9 @@ import { AccountTab } from "./_tabs/AccountTab";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-export default function Dashboard() {
+import { Suspense } from "react";
+
+function DashboardContent() {
   const [activeTab, setActiveTab] = useState<TabId>("links");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const searchParams = useSearchParams();
@@ -77,5 +79,17 @@ export default function Dashboard() {
           onClose={() => setIsPreviewOpen(false)} 
         />
       </div>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
   );
 }
