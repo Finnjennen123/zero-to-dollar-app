@@ -21,7 +21,7 @@ import { useEffect } from "react";
 import { Suspense } from "react";
 
 function DashboardContent() {
-  const [activeTab, setActiveTab] = useState<TabId>("links");
+  const [activeTap, setActiveTab] = useState<TabId>("links");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const searchParams = useSearchParams();
   const toast = useToast();
