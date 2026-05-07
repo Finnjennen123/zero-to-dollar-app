@@ -13,6 +13,7 @@ import {
 } from "react-icons/hi2";
 import { useAuth } from "./_lib/useAuth";
 import { getDisplayURL } from "./_lib/urls";
+import { GUIDE_CONTENT } from "./_lib/guideData";
 
 export default function LandingPage() {
   const { isAuthenticated, signOut } = useAuth();
@@ -162,6 +163,65 @@ export default function LandingPage() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Free Guide Section */}
+      <section className="py-24 md:py-32 px-6 border-t border-border-base relative overflow-hidden">
+        <div className="absolute inset-0 bg-primary-coral/5 -z-10" />
+        <div className="max-w-4xl mx-auto flex flex-col items-center">
+          <div className="text-center mb-16">
+            <h2 className="font-display text-4xl md:text-5xl text-text-primary mb-6">
+              Free: 5 Steps to a Link-in-Bio That Converts.
+            </h2>
+            <p className="text-lg text-text-secondary max-w-2xl mx-auto">
+              Learn how to optimize your page for maximum clicks. Read the full 3-minute guide below.
+            </p>
+          </div>
+
+          <div className="w-full bg-white rounded-[32px] p-8 md:p-12 shadow-sm border border-border-base relative">
+            <div className="text-center mb-16">
+              <span className="text-xs font-bold text-primary-coral uppercase tracking-widest mb-4 block">
+                {GUIDE_CONTENT.eyebrow}
+              </span>
+              <h3 className="font-display text-3xl md:text-4xl text-text-primary mb-4">
+                {GUIDE_CONTENT.headline}
+              </h3>
+              <p className="text-text-secondary">
+                {GUIDE_CONTENT.subtitle}
+              </p>
+            </div>
+
+            <div className="space-y-12">
+              {GUIDE_CONTENT.steps.map((step, idx) => (
+                <div key={idx} className="flex gap-6 md:gap-8">
+                  <div className="font-display text-4xl md:text-5xl text-primary-coral/20 shrink-0 mt-1">
+                    {idx + 1}
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-text-primary mb-3">
+                      {step.title}
+                    </h4>
+                    <p className="text-text-secondary leading-relaxed md:text-lg">
+                      {step.body}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-16 pt-12 border-t border-border-base text-center">
+              <p className="text-lg font-bold text-text-primary mb-8">
+                {GUIDE_CONTENT.footerLine}
+              </p>
+              <Link 
+                href="/dashboard"
+                className="inline-block bg-primary-coral text-white px-10 py-5 rounded-full font-bold uppercase tracking-wider text-sm shadow-xl shadow-primary-coral/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              >
+                Start building your page
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 

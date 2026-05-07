@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePage } from "../../_state/PageContext";
 import { useToast } from "../../_components/Toast";
-import { getDisplayURL } from "../../_lib/urls";
+import { getDisplayURL, getURL } from "../../_lib/urls";
 import { LoginPromptModal } from "./LoginPromptModal";
 import { useAuth } from "../../_lib/useAuth";
 import { supabase } from "../../../lib/supabase";
@@ -82,6 +82,46 @@ export function DashboardHeader({ onPreviewClick }: DashboardHeaderProps) {
     }
   };
 
+  const [isSharing, setIsSharing] = useState(false);
+
+  const handleShare = async () => {
+    if (!isAuthenticated) {
+      toast.show("Please sign up first to share pages");
+      router.push("/signup");
+      return;
+    }
+
+    try {
+      setIsSharing(true);
+      const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) throw new Error("No session");
+
+      const { error } = await supabase.from("prospect_pages").insert({
+        claim_token: token,
+        full_data: data,
+        created_by: session.user.id
+      });
+
+      if (error) throw error;
+
+      const shareUrl = `${getURL()}/claim/${token}`;
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.show("Private claim link copied to clipboard!");
+      } catch (clipErr) {
+        console.warn("Clipboard access denied, falling back to prompt");
+        window.prompt("Share link created! Copy it from here:", shareUrl);
+      }
+    } catch (err) {
+      console.error("Failed to generate prospect link:", err);
+      toast.show("Failed to create share link. Please try again.");
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
   return (
     <header className="sticky top-0 z-[100] w-full bg-white border-b border-border-base px-5 md:px-8 py-4 flex items-center justify-between">
       <div className="flex items-center gap-8">
@@ -106,6 +146,15 @@ export function DashboardHeader({ onPreviewClick }: DashboardHeaderProps) {
       </div>
 
       <div className="flex items-center gap-2 md:gap-3">
+        <button
+          onClick={handleShare}
+          disabled={isSharing}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-coral border border-primary-coral/20 bg-primary-coral/5 rounded-xl hover:bg-primary-coral/10 transition-colors disabled:opacity-50"
+          title="Create a private link for a prospect to claim this page"
+        >
+          {isSharing ? "Sharing..." : "Share for Prospect"}
+        </button>
+
         <button
           onClick={onPreviewClick}
           className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-text-primary border border-border-base rounded-xl hover:bg-dashboard-bg transition-colors"

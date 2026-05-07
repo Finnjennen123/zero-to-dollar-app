@@ -127,6 +127,33 @@ export default function SignupPage() {
     }
   };
 
+  const handleBypassSignup = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/auth/signup-bypass", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, username }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to create account");
+
+      // Now log in
+      const { error: loginError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (loginError) throw loginError;
+      
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#FBF8F4] flex flex-col items-center justify-center p-6 selection:bg-[#E8735A]/20">
       <Link href="/" className="font-display text-3xl text-[#1A1A1A] tracking-tight mb-12">
@@ -202,8 +229,17 @@ export default function SignupPage() {
           </div>
 
           {error && (
-            <div className="p-4 bg-[#D94F4F]/5 border border-[#D94F4F]/10 text-[#D94F4F] text-sm rounded-xl font-medium animate-fade-up font-sans">
-              {error}
+            <div className="space-y-4">
+              <div className="p-4 bg-[#D94F4F]/5 border border-[#D94F4F]/10 text-[#D94F4F] text-sm rounded-xl font-medium animate-fade-up font-sans">
+                {error}
+              </div>
+              <button
+                type="button"
+                onClick={handleBypassSignup}
+                className="w-full bg-[#1A1A1A] text-white py-3 rounded-xl font-bold text-sm hover:opacity-90 transition-all font-sans"
+              >
+                Bypass & Create (Dev Mode)
+              </button>
             </div>
           )}
 

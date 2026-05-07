@@ -39,7 +39,13 @@ export default function LoginPage() {
         password,
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        if (authError.message.includes("Email not confirmed")) {
+          // Add a property to the error to show the confirm button
+          (authError as any).canConfirm = true;
+        }
+        throw authError;
+      }
 
       if (authData.user) {
         // Restore pending work if it exists
@@ -59,6 +65,36 @@ export default function LoginPage() {
       router.push("/dashboard");
     } catch (err: any) {
       setError(translateError(err.message || "Something went wrong. Please try again."));
+      if (err.canConfirm) {
+        setError("Email not confirmed. [Confirm manually](/api/auth/confirm)"); // Placeholder or dynamic button
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAutoConfirm = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/auth/confirm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to confirm");
+      
+      setError(null);
+      // Try logging in again automatically
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (authError) throw authError;
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -205,9 +241,21 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="p-4 bg-[#D94F4F]/5 border border-[#D94F4F]/10 text-[#D94F4F] text-sm rounded-xl font-medium flex gap-3 animate-fade-up font-sans">
-              <HiOutlineInformationCircle className="shrink-0 mt-0.5" size={18} />
-              {error}
+            <div className="space-y-4">
+              <div className="p-4 bg-[#D94F4F]/5 border border-[#D94F4F]/10 text-[#D94F4F] text-sm rounded-xl font-medium flex gap-3 animate-fade-up font-sans">
+                <HiOutlineInformationCircle className="shrink-0 mt-0.5" size={18} />
+                {error}
+              </div>
+              
+              {error.includes("confirm your email") && (
+                <button
+                  type="button"
+                  onClick={handleAutoConfirm}
+                  className="w-full bg-[#1A1A1A] text-white py-3 rounded-xl font-bold text-sm hover:opacity-90 transition-all font-sans"
+                >
+                  Bypass Email Verification (Dev Only)
+                </button>
+              )}
             </div>
           )}
 

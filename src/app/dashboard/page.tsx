@@ -15,6 +15,7 @@ import { ProfileTab } from "./_tabs/ProfileTab";
 import { AppearanceTab } from "./_tabs/AppearanceTab";
 import { PaymentsTab } from "./_tabs/PaymentsTab";
 import { AccountTab } from "./_tabs/AccountTab";
+import { GuideTab } from "./_tabs/GuideTab";
 
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -52,6 +53,7 @@ function DashboardContent() {
       case "appearance": return <AppearanceTab />;
       case "payments": return <PaymentsTab />;
       case "account": return <AccountTab />;
+      case "guide": return <GuideTab />;
       default: return <LinksTab />;
     }
   };

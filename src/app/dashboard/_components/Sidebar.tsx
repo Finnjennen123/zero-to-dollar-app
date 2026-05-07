@@ -6,10 +6,11 @@ import {
   HiOutlineUser, 
   HiOutlineSwatch, 
   HiOutlineCreditCard, 
-  HiOutlineCog6Tooth 
+  HiOutlineCog6Tooth,
+  HiOutlineBookOpen
 } from "react-icons/hi2";
 
-export type TabId = "links" | "profile" | "appearance" | "payments" | "account";
+export type TabId = "links" | "profile" | "appearance" | "payments" | "account" | "guide";
 
 interface TabItem {
   id: TabId;
@@ -23,6 +24,7 @@ const TABS: TabItem[] = [
   { id: "appearance", label: "Appearance", icon: HiOutlineSwatch },
   { id: "payments", label: "Payments", icon: HiOutlineCreditCard },
   { id: "account", label: "Account", icon: HiOutlineCog6Tooth },
+  { id: "guide", label: "Guide", icon: HiOutlineBookOpen },
 ];
 
 interface SidebarProps {

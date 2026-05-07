@@ -171,6 +171,22 @@ export function PageProvider({ children }: { children: ReactNode }) {
 
   // Initial load and auth listener
   useEffect(() => {
+    // Check for a claimed draft (prospect handoff flow)
+    const claimedDraftJson = localStorage.getItem("claimed_draft");
+    if (claimedDraftJson) {
+      try {
+        const claimedDraft = JSON.parse(claimedDraftJson);
+        setData(claimedDraft);
+        // We keep it in localStorage until the first successful save to DB 
+        // OR we can clear it now and rely on state?
+        // Rules say: "If the prospect refreshes the dashboard before signing up, 
+        // the shared draft should still be there"
+        // So we should NOT clear it until it's saved to DB.
+      } catch (err) {
+        console.error("Failed to parse claimed draft:", err);
+      }
+    }
+
     refresh();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
@@ -202,6 +218,21 @@ export function PageProvider({ children }: { children: ReactNode }) {
 
       if (error) throw error;
       console.log("Saved successfully");
+
+      // If this was a claimed draft, mark it as claimed in the prospect_pages table
+      const claimingToken = localStorage.getItem("claiming_token");
+      if (claimingToken) {
+        await supabase
+          .from("prospect_pages")
+          .update({ 
+            is_claimed: true,
+            claimed_by: session.user.id 
+          })
+          .eq("claim_token", claimingToken);
+        
+        localStorage.removeItem("claimed_draft");
+        localStorage.removeItem("claiming_token");
+      }
     } catch (err) {
       console.error("Failed to save:", err);
     }
